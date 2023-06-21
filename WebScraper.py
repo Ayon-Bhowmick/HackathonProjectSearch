@@ -1,14 +1,14 @@
 from selenium import webdriver
-import os
 import concurrent.futures
 import threading
 import time
-import re
+import os
 
 MAX_WORKERS = 10
 BOX_XPATH = "/html/body/section/div[3]/div/div[2]"
 INFO_XPATH = "/html/body/section/article[1]/div/div/div[2]"
 BUILT_WITH_XPATH = "/html/body/section/article[1]/div/div/div[3]/ul"
+TITLE_XPATH = "/html/body/section/header/div[1]/div/h1"
 project_pages: list[str] = [f"https://devpost.com/software/search?page={num}&query=is%3Awinner" for num in range(1, 10)]
 
 def get_projects():
@@ -29,6 +29,13 @@ def get_info():
         driver.get(page)
         info = [p.text for p in driver.find_element("xpath", INFO_XPATH).find_elements("tag name", "p")]
         built_with = [li.text for li in driver.find_element("xpath", BUILT_WITH_XPATH).find_elements("tag name", "li")]
+        info.append(", ".join(built_with))
+        title = driver.find_element("xpath", TITLE_XPATH).text
+        with open(f"Projects/{title}.txt", "w") as f:
+            f.write("\n".join(info))
+    driver.quit()
+    print(f"Finished {threading.current_thread().name} with {len(projects)} projects left")
+
 
 
 if __name__ == "__main__":
@@ -42,3 +49,13 @@ if __name__ == "__main__":
     pages_futures = [pool.submit(get_projects) for _ in range(MAX_WORKERS)]
     concurrent.futures.wait(pages_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
     print(len(projects), len(project_pages))
+
+    project_futures = [pool.submit(get_info) for _ in range(MAX_WORKERS)]
+    concurrent.futures.wait(project_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
+    print(len(os.listdir("Projects")), len(projects))
+    seconds = time.time() - start
+    minutes = seconds // 60
+    seconds = seconds - minutes * 60
+    hours = minutes // 60
+    minutes = minutes - hours * 60
+    print(f"Total time: {int(hours)}:{int(minutes)}:{seconds}")
