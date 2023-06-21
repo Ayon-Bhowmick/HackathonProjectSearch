@@ -61,6 +61,7 @@ if __name__ == "__main__":
         project_futures = [pool.submit(get_info) for _ in range(MAX_WORKERS)]
         concurrent.futures.wait(project_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
         print(len(os.listdir("Projects")), len(projects))
+    pool.shutdown(wait=True)
 
     seconds = time.time() - start
     minutes = seconds // 60
