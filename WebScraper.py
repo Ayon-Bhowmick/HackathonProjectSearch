@@ -17,6 +17,7 @@ def get_projects():
     print(f"Starting {threading.current_thread().name} with {len(project_pages)} pages left")
     driver = webdriver.Chrome(options=chrome_options)
     while len(project_pages) > 0:
+        print(f"{len(projects)} pages left")
         page = project_pages.pop()
         driver.get(page)
         links = driver.find_element("xpath", BOX_XPATH).find_elements("tag name", "a")
@@ -29,6 +30,7 @@ def get_info():
     print(f"Starting {threading.current_thread().name} with {len(projects)} projects left")
     driver = webdriver.Chrome(options=chrome_options)
     while len(projects) > 0:
+        print(f"{len(projects)} projects left")
         page = projects.pop()
         driver.get(page)
         info = [p.text for p in driver.find_element("xpath", INFO_XPATH).find_elements("tag name", "p")]
