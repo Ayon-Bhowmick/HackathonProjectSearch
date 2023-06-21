@@ -14,6 +14,7 @@ RESERVED_CHARS = ("<", ">", ":", "\"", "/", "\\", "|", "?", "*")
 project_pages: list[str] = [f"https://devpost.com/software/search?page={num}&query=is%3Awinner" for num in range(1, NUM_PAGES + 1)]
 
 def get_projects():
+    print(f"Starting {threading.current_thread().name} with {len(project_pages)} pages left")
     driver = webdriver.Chrome(options=chrome_options)
     while len(project_pages) > 0:
         page = project_pages.pop()
@@ -25,6 +26,7 @@ def get_projects():
     print(f"Finished {threading.current_thread().name} with {len(project_pages)} pages left")
 
 def get_info():
+    print(f"Starting {threading.current_thread().name} with {len(projects)} projects left")
     driver = webdriver.Chrome(options=chrome_options)
     while len(projects) > 0:
         page = projects.pop()
@@ -58,6 +60,7 @@ if __name__ == "__main__":
     print(len(projects), len(project_pages))
 
     while len(projects) > 0:
+        print(f"staring new loop with {len(projects)} projects left")
         project_futures = [pool.submit(get_info) for _ in range(MAX_WORKERS)]
         concurrent.futures.wait(project_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
         print(len(os.listdir("Projects")), len(projects))
