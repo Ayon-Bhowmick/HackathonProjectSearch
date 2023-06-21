@@ -10,7 +10,7 @@ INFO_XPATH = "/html/body/section/article[1]/div/div/div[2]"
 BUILT_WITH_XPATH = "/html/body/section/article[1]/div/div/div[3]/ul"
 TITLE_XPATH = "/html/body/section/header/div[1]/div/h1"
 RESERVED_CHARS = ("<", ">", ":", "\"", "/", "\\", "|", "?", "*")
-project_pages: list[str] = [f"https://devpost.com/software/search?page={num}&query=is%3Awinner" for num in range(1, 10)]
+project_pages: list[str] = [f"https://devpost.com/software/search?page={num}&query=is%3Awinner" for num in range(1, 1302)]
 
 def get_projects():
     driver = webdriver.Chrome(options=chrome_options)
