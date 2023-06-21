@@ -4,7 +4,7 @@ import threading
 import time
 import os
 
-MAX_WORKERS = 10
+MAX_WORKERS = 100
 NUM_PAGES = 1301
 BOX_XPATH = "/html/body/section/div[3]/div/div[2]"
 INFO_XPATH = "/html/body/section/article[1]/div/div/div[2]"
@@ -47,6 +47,9 @@ if __name__ == "__main__":
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("log-level=3")
+    chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--ignore-ssl-errors")
+    chrome_options.add_argument("--ignore-certificate-errors-spki-list")
 
     projects = []
     pool = concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
