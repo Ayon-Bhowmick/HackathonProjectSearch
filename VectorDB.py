@@ -13,8 +13,8 @@ if __name__ == "__main__":
     start = time.time()
 
     # add documents
-    for i, project in enumerate(os.listdir("../Projects")):
-        with open("../Projects/" + project, "r") as f:
+    for i, project in enumerate(os.listdir("./Projects")):
+        with open("./Projects/" + project, "r") as f:
             project_name = project[:-4]
             text = [line for line in f.read().split("\n")]
             num_lines = len(text)
