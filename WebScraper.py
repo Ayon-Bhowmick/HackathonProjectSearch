@@ -9,6 +9,7 @@ BOX_XPATH = "/html/body/section/div[3]/div/div[2]"
 INFO_XPATH = "/html/body/section/article[1]/div/div/div[2]"
 BUILT_WITH_XPATH = "/html/body/section/article[1]/div/div/div[3]/ul"
 TITLE_XPATH = "/html/body/section/header/div[1]/div/h1"
+RESERVED_CHARS = ("<", ">", ":", "\"", "/", "\\", "|", "?", "*")
 project_pages: list[str] = [f"https://devpost.com/software/search?page={num}&query=is%3Awinner" for num in range(1, 10)]
 
 def get_projects():
@@ -31,6 +32,8 @@ def get_info():
         built_with = [li.text for li in driver.find_element("xpath", BUILT_WITH_XPATH).find_elements("tag name", "li")]
         info.append(", ".join(built_with))
         title = driver.find_element("xpath", TITLE_XPATH).text
+        # replace all invalid characters with _
+        title = "".join([char if char not in RESERVED_CHARS else "_" for char in title])
         with open(f"Projects/{title}.txt", "w") as f:
             f.write("\n".join(info))
     driver.quit()
@@ -50,9 +53,11 @@ if __name__ == "__main__":
     concurrent.futures.wait(pages_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
     print(len(projects), len(project_pages))
 
-    project_futures = [pool.submit(get_info) for _ in range(MAX_WORKERS)]
-    concurrent.futures.wait(project_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
-    print(len(os.listdir("Projects")), len(projects))
+    while len(projects) > 0:
+        project_futures = [pool.submit(get_info) for _ in range(MAX_WORKERS)]
+        concurrent.futures.wait(project_futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
+        print(len(os.listdir("Projects")), len(projects))
+
     seconds = time.time() - start
     minutes = seconds // 60
     seconds = seconds - minutes * 60
