@@ -3,6 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import chromadb
 from chromadb.utils import embedding_functions
 from chromadb.config import Settings
+from pydantic import BaseModel
+
+
+class QueryBody(BaseModel):
+    question: str
+    num_res: int
 
 api = FastAPI()
 # make collection
@@ -10,7 +16,7 @@ ef = embedding_functions.InstructorEmbeddingFunction(model_name="sentence-transf
 client = chromadb.Client(Settings(chroma_db_impl="duckdb+parquet", persist_directory="./chromadb"))
 collection = client.get_or_create_collection(name="projects", embedding_function=ef, metadata={"hnsw:space": "cosine"})
 
-@api.get("/query/{query}")
-def query(query: str):
-    res = collection.query(query_texts=[query], n_results=10)
+@api.get("/query")
+def query(question: str = Body(..., embed=True), num_res: int = Body(..., embed=True)):
+    res = collection.query(query_texts=[question], n_results=num_res)
     return res

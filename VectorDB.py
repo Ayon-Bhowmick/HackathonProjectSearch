@@ -22,9 +22,9 @@ if __name__ == "__main__":
             ids = [f"{i}_{j}" for j in range(num_lines)]
         try:
             collection.add(documents=text, ids=ids, metadatas=metadata)
-            print(f"Added {project_name} to collection")
+            print(f"Added to collection")
         except chromadb.errors.IDAlreadyExistsError as IDerror:
-            print(f"{project_name} already in collection")
+            print(f"already in collection")
             continue
 
     seconds = time.time() - start
