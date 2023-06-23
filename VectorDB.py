@@ -9,6 +9,16 @@ ef = embedding_functions.InstructorEmbeddingFunction(model_name="sentence-transf
 client = chromadb.Client(Settings(chroma_db_impl="duckdb+parquet", persist_directory="./chromadb"))
 collection = client.get_or_create_collection(name="projects", embedding_function=ef, metadata={"hnsw:space": "cosine"})
 
+def query(question: str, n: int):
+    """
+    gets nearby embedings from question
+    :params: question: question to query
+    :params: n: number of responces to return
+    :return: n nearest neighbors to the question
+    """
+    res = collection.query(query_texts=[question], n_results=n)
+    return res
+
 if __name__ == "__main__":
     start = time.time()
 
