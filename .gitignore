@@ -1,3 +1,4 @@
 Projects/
 chromadb/
 *.log
+.env
