@@ -1,6 +1,8 @@
 import os
 import discord
 from dotenv import load_dotenv
+import VectorDB
+from json import loads
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -17,8 +19,14 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # send message to channel
-    if message.content != "":
-        await message.channel.send("Hello World!")
+    if message.content != "" and message.author != client.user:
+        await message.channel.send("Searching...")
+        query: str = message.content.replace("@HackathonSearchBot", "").strip()
+        res = VectorDB.query(query, 10)
+        projects = res["documents"][0]
+        for proj in projects:
+            await message.channel.send(proj)
+        # projects = ", ".join([proj["project"] for proj in res["metadatas"][0]])
+        # await message.channel.send(projects)
 
 client.run(TOKEN)
