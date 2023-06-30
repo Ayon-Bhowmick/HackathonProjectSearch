@@ -14,4 +14,5 @@ This project was made in order to help me and my friends come up with a project 
 
 - The descriptions of the winning hackathon projects was scraped from [Devpost](https://devpost.com/) using [Selenium](https://www.selenium.dev/).
 - The projects descriptions were embedded using [All MPNet base V2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) which is a fine tuned version of Microsoft's [MPNet](https://huggingface.co/microsoft/mpnet-base).
-- The vector database was made using 
+- The vector database was made using [Chroma](https://www.trychroma.com/) which is built on top of DuckDB and Apache Parquet.
+- The discord bot was made using [Discord.py](https://discordpy.readthedocs.io/en/stable/) and the REST API was made using [FastAPI](https://fastapi.tiangolo.com/).
